@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo</title>
+    <style>
+        .div {
+            display: inline-block;
+            height: 100px;
+            width: 200px;
+            background-color: rgb(216, 219, 219);
+            margin: 4px;
+        }
+
+        input {
+            display: block;
+        }
+
+        button {
+            margin: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div-l" class="div">
+
+    </div>
+    <div id="div-r" class="div">
+        <input type="text" placeholder="I need to..." id="inp">
+        <button id="add">add task</button>
+    </div>
+
+    <script>
+        const ans = [];
+        // let chbtn=document.createElement("button");
+        // chbtn.innerHTML= "&check;";// to add tick buutton
+        // let crbtn=document.createElement("button");
+        // crbtn.innerHTML= "&cross;";// to add cross buutton
+        //elementname.append(e1,e2,e3,..en); way to append multiple elements
+        // style.textDecoration="line-through"; to add line across the input text
+        //"line-up".....
+
+        let btn = document.getElementById("add");
+        function addInDiv() {
+            let data = document.getElementById("inp").value;
+
+            let dvl = document.getElementById("div-l");
+            let ndv = document.createElement("div");
+            let span = document.createElement("span");
+            span.innerHTML = data;
+            let tick = document.createElement("button");
+            tick.setAttribute("id", "tck");
+            tick.innerHTML = "&check;";
+
+            tick.addEventListener("click", () => {
+                ans.push(data);
+                span.style.textDecoration = "line-through";
+                var ansl = JSON.stringify(ans);
+                localStorage.setItem("ans", ansl);
+                document.getElementById("inp").value = '';
+            })
+            let cross = document.createElement("button");
+            cross.setAttribute("id", "crs");
+            cross.innerHTML = "&cross;";
+
+            cross.addEventListener("click", () => {
+                document.getElementById("inp").value = "";
+                ndv.remove();
+            })
+            let edit = document.createElement('button');
+            edit.id = "edit";
+            edit.innerHTML = "edit";
+            edit.addEventListener('click', () => {
+                console.log("edit");
+                let inpInSpn = document.createElement('input');
+                span.innerHTML = "";
+                span.append(inpInSpn);
+                inpInSpn.type = "text";
+                inpInSpn.value = data;
+                inpInSpn.addEventListener('keypress', (e) => {
+                    if (e.key == "Enter"){
+                        span.innerHTML = inpInSpn.value;
+                        let arr=JSON.parse(localStorage.getItem("ans"));
+                        localStorage.clear();
+                        for(let i=0;i<arr.length;i++)
+                        {
+                            if(arr[i]==data)
+                            arr[i]=inpInSpn.value;
+                        }
+                        localStorage.setItem("ans",JSON.stringify(arr));
+
+                    }
+                })
+
+            })
+            ndv.append(span, tick, cross, edit);// appendChild() can only append one element at a time, so should not use appendChild
+            dvl.append(ndv);
+        }
+        btn.addEventListener("click", addInDiv);
+
+
+        console.log(localStorage);
+    </script>
+</body>
+
+</html>
